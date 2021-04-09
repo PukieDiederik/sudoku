@@ -14,19 +14,21 @@ namespace programming
                     string[] lines = File.ReadAllLines(args[0]);
                     byte[] unsolvedSudoku = ParseSudoku(lines[0].Split(',')[0]);
 
-                    foreach(byte b in unsolvedSudoku) {Console.Write(b + " "); } Console.Write("\n");
+                    foreach(byte b in unsolvedSudoku) {Console.Write(b); } Console.Write("\n");
                     
+                    Console.WriteLine(unsolvedSudoku[1]);
+
                     //start solving the sudoku
                     int curPos = 0; //the current position the solver is working on
-                    byte[] workingSudoku = unsolvedSudoku;
+                    byte[] workingSudoku = new byte[81];
+                    Array.Copy(unsolvedSudoku, 0, workingSudoku, 0, unsolvedSudoku.Length);
                     bool direction = true; //true forward, false backward
                     while(curPos < 81){
                         //skips over pre-defined numbers
-                        if     (unsolvedSudoku[curPos] != 0 && direction)   {curPos++; continue;}
-                        else if(unsolvedSudoku[curPos] != 0 && curPos != 0) {curPos--; Console.WriteLine("UWU " + curPos); continue; }
+                        if     (unsolvedSudoku[curPos] != 0 && direction)   { curPos++; continue; }
+                        else if(unsolvedSudoku[curPos] != 0 && curPos != 0) { curPos--; continue; }
                         else { //if it doesnt need to skip numbers
                             if(workingSudoku[curPos] >= 9) { //check if we need to abandon this branch
-                                Console.WriteLine("working???");
                                 workingSudoku[curPos] = 0;
                                 curPos--;
                                 direction = false;
@@ -35,7 +37,6 @@ namespace programming
                                 workingSudoku[curPos]++;
                                 while(!isValid(workingSudoku, curPos) && workingSudoku[curPos] < 9){
                                     workingSudoku[curPos]++;
-                                    if(workingSudoku[curPos] == 9) {Console.WriteLine("curpos: " + curPos);}
                                 }
                                 if(workingSudoku[curPos] < 9) curPos++;
                                 else if(workingSudoku[curPos] == 9) {

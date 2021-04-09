@@ -1,6 +1,9 @@
 # Created by https://www.toptal.com/developers/gitignore/api/code,dotnetcore,csharp
 # Edit at https://www.toptal.com/developers/gitignore?templates=code,dotnetcore,csharp
 
+### ENV ###
+[Ii]nput/
+
 ### Code ###
 .vscode/*
 !.vscode/tasks.json

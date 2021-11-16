@@ -2,7 +2,7 @@
 using System.IO;
 using System.Text;
 using System.Collections.Generic;
-
+using System.Text.RegularExpressions;
 using CommandLine;
 
 namespace programming
@@ -77,14 +77,15 @@ namespace programming
 
         //parses the read string into a byte[]
         static Byte[] ParseSudoku(string input){
-            byte[] parsedSudoku = new byte[81];
-            if(input.Length != 81 /* 9*9 */) { Console.WriteLine("[ERROR] not enough characters"); return null; }
-            else {
+            //regex :D
+            if(new Regex("^[0-9]{81}$").IsMatch(input)){
+                byte[] parsedSudoku = new byte[81];
                 for (int i = 0; i < 81; i++){
                     parsedSudoku[i] = Byte.Parse(input[i].ToString());
                 }
+                return parsedSudoku;
             }
-            return parsedSudoku;
+            return null;
         }
 
         //expects to get byte[81] as input

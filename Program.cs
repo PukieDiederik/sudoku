@@ -49,31 +49,29 @@ namespace programming
             // if(sudokus.Count != 0){ //make sure there are sudokus to solve
             for(int i = 0; i < sudokus.Count; i++){
                 //start processing the sudoku
-                byte[] unsolvedSudoku = sudokus[i]; //SHOULDN'T BE MODIFIED
-                byte[] workingSudoku = new byte[81]; //the sudoku that can be modified
-                Array.Copy(unsolvedSudoku, 0, workingSudoku, 0, unsolvedSudoku.Length); //copy the sudoku to the work-sudoku
+                byte[] initialSudoku = sudokus[i]; //The initial state of the sudoku
+                byte[] unsolvedSudoku = new byte[81]; //the sudoku variable that will be worked on
+                Array.Copy(initialSudoku, 0, unsolvedSudoku, 0, initialSudoku.Length); //copy the sudoku to the work-sudoku
    
                 //start solving the sudoku
-                int curPos = 0; //the current position the solver is working on
-                bool direction = true; //true forward, false backward
-                while(curPos < 81){
-                    //skips over pre-defined numbers
-                    if     (unsolvedSudoku[curPos] != 0 && direction)   { curPos++; continue; }
-                    else if(unsolvedSudoku[curPos] != 0 && curPos != 0) { curPos--; continue; }
-                    else { //if it doesnt need to skip numbers
-                        direction = true; //make sure we are moving forward again
-                        workingSudoku[curPos]++; //start checking the next number
-                        while(!IsValid(workingSudoku, curPos) && workingSudoku[curPos] < 9){
-                            workingSudoku[curPos]++; //keep increasing until we find a valid number or > 9
+                sbyte currentPos = 0; //the current position the solver is working on
+                sbyte direction = 1; // 1 forward, -1 backward
+                while(currentPos < 81 && currentPos >=0){
+                    if(initialSudoku[currentPos] != 0) currentPos += direction; //skip if there is a constant number here
+                    else {
+                        //set the direction to forward
+                        direction = 1;
+                        unsolvedSudoku[currentPos] += 1;
+                        while(!IsValid(unsolvedSudoku, currentPos) && unsolvedSudoku[currentPos] <= 9){
+                            unsolvedSudoku[currentPos]++;
                         }
-                        //finalize numbers
-                        if(workingSudoku[curPos] < 9) curPos++;
-                        else if(workingSudoku[curPos] == 9 && IsValid(workingSudoku,curPos)) curPos++;
-                        else { workingSudoku[curPos] = 0; curPos--; direction = false; }
+                        if(unsolvedSudoku[currentPos] <= 9) {currentPos++; continue;}
+                        else {unsolvedSudoku[currentPos] = 0; direction = -1; currentPos--;}
+                        
                     }
                 }
-                //write the solution in consolse
-                Console.WriteLine($"[{i}]: {SudokuToString(unsolvedSudoku)} {SudokuToString(workingSudoku)}");
+                //write the solution to console
+                Console.WriteLine($"[{i}]: {SudokuToString(initialSudoku)} {SudokuToString(unsolvedSudoku)}");
             }
         }
 

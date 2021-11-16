@@ -2,12 +2,18 @@
 using System.IO;
 using System.Diagnostics; //for stopwatch
 
+using CommandLine;
+
 namespace programming
 {
     class Program
     {
         static void Main(string[] args)
         {
+            //parse arguments
+            var options = Parser.Default.ParseArguments<ArgOptions>(args);
+
+
             //timing
             Stopwatch stopwatch = new Stopwatch();
             stopwatch.Start();
@@ -99,6 +105,19 @@ namespace programming
 
             return true;
         }
+    }
+
+    //options that can be given which affect how the program works
+    class ArgOptions {
+        //Either input a sudoku or file
+        [Option('s', "sudoku", Group="input")]
+        public string sudoku {get; set;}
+        [Option('f', "file"  , Group="input")]
+        public string file   {get; set;}
+
+        //max amount of sudokus it will process
+        [Option('m', "max-sudokus", Default=100)]
+        public int maxSudokus {get; set;}
     }
 }
 

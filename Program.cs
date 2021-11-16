@@ -1,6 +1,7 @@
 ﻿using System;
 using System.IO;
 using System.Diagnostics; //for stopwatch
+using System.Collections.Generic;
 
 using CommandLine;
 
@@ -10,9 +11,39 @@ namespace programming
     {
         static void Main(string[] args)
         {
-            //parse arguments
-            var options = Parser.Default.ParseArguments<ArgOptions>(args);
+            List<byte[]> sudokus = new List<byte[]>();
+            int maxSudokus;
 
+            //parse arguments
+            var options = Parser.Default.ParseArguments<ArgOptions>(args)
+                .WithParsed(options => {
+                    //set maxSudokus
+                    maxSudokus = options.maxSudokus;
+
+                    //parse sudokus
+                    if(options.sudoku != null){
+                        byte[] sudoku = ParseSudoku(options.sudoku);
+                        if(sudoku != null) sudokus.Add(sudoku);
+                        else Console.WriteLine("[ERROR] invalid sudoku: " + options.sudoku);
+                    }
+                    if(options.file != null){
+                        if(File.Exists(options.file)){
+                            string[] lines = File.ReadAllLines(options.file);
+                            for(int i = 0; i < lines.Length; i++){
+                                //start parsing each line for sudokus
+                                byte[] sudoku = ParseSudoku(lines[i]);
+                                if(sudoku != null) sudokus.Add(sudoku);
+                                else Console.WriteLine("[ERROR] invalid sudoku: " + lines[i]);
+
+                                //stop adding if we have reached max sudokus
+                                if(sudokus.Count == maxSudokus) break;
+                            }
+                        } else {
+                            Console.WriteLine("[ERROR] Invalid file path: " + options.file);
+                        }
+                    }
+
+                });
 
             //timing
             Stopwatch stopwatch = new Stopwatch();

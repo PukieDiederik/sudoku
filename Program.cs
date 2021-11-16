@@ -13,10 +13,10 @@ namespace programming
             stopwatch.Start();
 
             //making sure the right arghuments have been given if any
-            if(args.Length > 0){
-                if(File.Exists(args[0])){
+            if(args.Length > 1){
+                if(File.Exists(args[1])){
                     //start processing the sudoku
-                    string[] lines = File.ReadAllLines(args[0]);
+                    string[] lines = File.ReadAllLines(args[1]);
                     byte[] unsolvedSudoku = ParseSudoku(lines[0].Split(',')[0]); //SHOULDN'T BE MODIFIED
                     byte[] workingSudoku = new byte[81]; //the sudoku that can be modified
                     Array.Copy(unsolvedSudoku, 0, workingSudoku, 0, unsolvedSudoku.Length); //copy the sudoku to the work-sudoku

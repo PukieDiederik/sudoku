@@ -45,51 +45,41 @@ namespace programming
 
                 });
 
-            //timing
-            Stopwatch stopwatch = new Stopwatch();
-            stopwatch.Start();
+            if(sudokus.Count != 0){
+                //start processing the sudoku
+                byte[] unsolvedSudoku = sudokus[0]; //SHOULDN'T BE MODIFIED
+                byte[] workingSudoku = new byte[81]; //the sudoku that can be modified
+                Array.Copy(unsolvedSudoku, 0, workingSudoku, 0, unsolvedSudoku.Length); //copy the sudoku to the work-sudoku
 
-            //making sure the right arghuments have been given if any
-            if(args.Length > 1){
-                if(File.Exists(args[1])){
-                    //start processing the sudoku
-                    string[] lines = File.ReadAllLines(args[1]);
-                    byte[] unsolvedSudoku = ParseSudoku(lines[0].Split(',')[0]); //SHOULDN'T BE MODIFIED
-                    byte[] workingSudoku = new byte[81]; //the sudoku that can be modified
-                    Array.Copy(unsolvedSudoku, 0, workingSudoku, 0, unsolvedSudoku.Length); //copy the sudoku to the work-sudoku
-
-                    //write input to console
-                    Console.Write("Input:  ");
-                    foreach(byte b in unsolvedSudoku) {Console.Write(b); } Console.Write("\n");
-                    
-                    
-                    //start solving the sudoku
-                    int curPos = 0; //the current position the solver is working on
-                    bool direction = true; //true forward, false backward
-                    while(curPos < 81){
-                        //skips over pre-defined numbers
-                        if     (unsolvedSudoku[curPos] != 0 && direction)   { curPos++; continue; }
-                        else if(unsolvedSudoku[curPos] != 0 && curPos != 0) { curPos--; continue; }
-                        else { //if it doesnt need to skip numbers
-                            direction = true; //make sure we are moving forward again
-                            workingSudoku[curPos]++; //start checking the next number
-                            while(!isValid(workingSudoku, curPos) && workingSudoku[curPos] < 9){
-                                workingSudoku[curPos]++; //keep increasing until we find a valid number or > 9
-                            }
-                            //finalize numbers
-                            if(workingSudoku[curPos] < 9) curPos++;
-                            else if(workingSudoku[curPos] == 9 && isValid(workingSudoku,curPos)) curPos++;
-                            else { workingSudoku[curPos] = 0; curPos--; direction = false; }
+                //write input to console
+                Console.Write("Input:  ");
+                foreach(byte b in unsolvedSudoku) {Console.Write(b); } Console.Write("\n");
+                
+                
+                //start solving the sudoku
+                int curPos = 0; //the current position the solver is working on
+                bool direction = true; //true forward, false backward
+                while(curPos < 81){
+                    //skips over pre-defined numbers
+                    if     (unsolvedSudoku[curPos] != 0 && direction)   { curPos++; continue; }
+                    else if(unsolvedSudoku[curPos] != 0 && curPos != 0) { curPos--; continue; }
+                    else { //if it doesnt need to skip numbers
+                        direction = true; //make sure we are moving forward again
+                        workingSudoku[curPos]++; //start checking the next number
+                        while(!isValid(workingSudoku, curPos) && workingSudoku[curPos] < 9){
+                            workingSudoku[curPos]++; //keep increasing until we find a valid number or > 9
                         }
+                        //finalize numbers
+                        if(workingSudoku[curPos] < 9) curPos++;
+                        else if(workingSudoku[curPos] == 9 && isValid(workingSudoku,curPos)) curPos++;
+                        else { workingSudoku[curPos] = 0; curPos--; direction = false; }
                     }
-                    stopwatch.Stop();
-                    //write the solution in consolse
-                    Console.Write("output: ");
-                    foreach(byte b in workingSudoku) { Console.Write(b); } Console.Write("\n"); 
+                }
+                //write the solution in consolse
+                Console.Write("output: ");
+                foreach(byte b in workingSudoku) { Console.Write(b); } Console.Write("\n"); 
 
-                } else Console.WriteLine("[ERROR] Invalid path or file does not exist");
-            } else Console.WriteLine("[ERROR] Didn't specify file path");
-            Console.WriteLine("finished in: " + stopwatch.Elapsed);
+            }
         }
 
         //parses the read string into a byte[]

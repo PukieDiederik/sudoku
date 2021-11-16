@@ -45,9 +45,11 @@ namespace programming
 
                 });
 
-            if(sudokus.Count != 0){
+            //start solving sudokus
+            // if(sudokus.Count != 0){ //make sure there are sudokus to solve
+            for(int i = 0; i < sudokus.Count; i++){
                 //start processing the sudoku
-                byte[] unsolvedSudoku = sudokus[0]; //SHOULDN'T BE MODIFIED
+                byte[] unsolvedSudoku = sudokus[i]; //SHOULDN'T BE MODIFIED
                 byte[] workingSudoku = new byte[81]; //the sudoku that can be modified
                 Array.Copy(unsolvedSudoku, 0, workingSudoku, 0, unsolvedSudoku.Length); //copy the sudoku to the work-sudoku
 
